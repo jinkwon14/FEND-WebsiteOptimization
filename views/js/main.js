@@ -517,8 +517,8 @@ function logAverageFrame(times) {   // times is the array of User Timing measure
 //     items[i].style.transform = "translateX(15px)";
 //   }
 //
-//   // User Timing API to the rescue again. Seriously, it's worth learning.
-//   // Super easy to create custom metrics.
+  // User Timing API to the rescue again. Seriously, it's worth learning.
+  // Super easy to create custom metrics.
 //   window.performance.mark("mark_end_frame");
 //   window.performance.measure("measure_frame_duration", "mark_start_frame", "mark_end_frame");
 //   if (frame % 10 === 0) {
@@ -526,41 +526,45 @@ function logAverageFrame(times) {   // times is the array of User Timing measure
 //     logAverageFrame(timesToUpdatePosition);
 //   }
 // }
-window.addEventListener('scroll',function() {
-  console.log(document.body.scrollTop,'\n',document.body.scrollTop/1250);
-}
-);
 
-function OscillatingArrayZeroToOne(N) {
+function OscillArray(amp, N) {
   var list = [];
   for (var i = 0; i <= N; i++) {
     // Generats a list containing a one full sine cycle with N elements (e.g. 0 -1 0 1 0 for N = 5)
-    list.push(Math.sin(2*3.1415927*i/N));
+    list.push(amp*(Math.sin(2*3.1415927*i/N)));
   }
   return list;
 }
 
-function Oscillator(amplitude, frequency) {
-  // frequncy: how many pixels to make a round trip - in px
-  // amplitude: the magnitude of travel - in px
-  var arr = OscillatingArrayZeroToOne(frequency);
-  for (var i = 0; i < arr.length; i++) {
-    arr[i] = amplitude*arr[i];
-  }
-  return arr;
-}
-
 // This was put into global scope so that the function call will not be invoked with every single scroll event!
-var freq = 7500;
-var oslist = Oscillator(200, freq);
+var freq = 800;
+var move_range = (screen.width)/8*.6;
+var oslist = OscillArray(move_range, freq);
+
+// Positions a pizza in a random phase
+var rand_num = Math.floor(Math.random()*10000);
 
 function updatePositions() {
-  var items = document.querySelectorAll('.mover');
 
+    frame++;
+    window.performance.mark("mark_start_frame");
+
+  var items = document.querySelectorAll('.mover');
+    var r = rand_num;
     for (var i = 0; i < items.length; i++) {
+      r = r*(1+i);
+      var idx = r%freq;
+
       var index = document.body.scrollTop;
-      items[i].style.transform = "translateX(" + oslist[index%freq] + "px)";
-      // console.log(oscil_list[index%30]);
+      items[i].style.transform = "translateX(" + oslist[(idx + index%freq)%freq] + "px)";
+
+    }
+
+    window.performance.mark("mark_end_frame");
+    window.performance.measure("measure_frame_duration", "mark_start_frame", "mark_end_frame");
+    if (frame % 10 === 0) {
+      var timesToUpdatePosition = window.performance.getEntriesByName("measure_frame_duration");
+      logAverageFrame(timesToUpdatePosition);
     }
 }
 // runs updatePositions on scroll
@@ -574,6 +578,10 @@ document.addEventListener('DOMContentLoaded', function() {
   var col_width = device_width/cols;
   var initial_pos = col_width/2;
 
+  // TODO: maybe put rand to here!
+
+  var r = rand_num;
+
   for (var i = 0; i < 200; i++) {
     var elem = document.createElement('img');
     elem.className = 'mover';
@@ -582,8 +590,10 @@ document.addEventListener('DOMContentLoaded', function() {
     elem.style.width = "73.333px";
 
     // Position pizzas.
-    elem.style.left = initial_pos + col_width*(i%cols) + 'px';
-    console.log(screen.width);
+    r = r*(1+i);
+    var idx = r%freq;
+
+    elem.style.left = initial_pos + col_width*(i%cols) + oslist[idx] + 'px';
     // elem.basicLeft = (i % cols) * s;
     elem.style.top = (Math.floor(i / cols) * s) + 'px';
     document.querySelector("#movingPizzas1").appendChild(elem);
