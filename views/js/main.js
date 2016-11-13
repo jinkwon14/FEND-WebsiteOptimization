@@ -285,6 +285,8 @@ function getNoun(y) {
 var adjectives = ["dark", "color", "whimsical", "shiny", "noisy", "apocalyptic", "insulting", "praise", "scientific"];  // types of adjectives for pizza titles
 var nouns = ["animals", "everyday", "fantasy", "gross", "horror", "jewelry", "places", "scifi"];                        // types of nouns for pizza titles
 
+// TODO: refartor out the randomAdjective, randomNoun
+
 // Generates random numbers for getAdj and getNoun functions and returns a new pizza name
 function generator(adj, noun) {
   var adjectives = getAdj(adj);
@@ -497,26 +499,70 @@ function logAverageFrame(times) {   // times is the array of User Timing measure
 // https://www.igvita.com/slides/2012/devtools-tips-and-tricks/jank-demo.html
 
 // Moves the sliding background pizzas based on scroll position
-function updatePositions() {
-  frame++;
-  window.performance.mark("mark_start_frame");
+// TODO: Optimize this function
 
-  var items = document.querySelectorAll('.mover');
-  for (var i = 0; i < items.length; i++) {
-    var phase = Math.sin((document.body.scrollTop / 1250) + (i % 5));
-    items[i].style.left = items[i].basicLeft + 100 * phase + 'px';
-  }
 
-  // User Timing API to the rescue again. Seriously, it's worth learning.
-  // Super easy to create custom metrics.
-  window.performance.mark("mark_end_frame");
-  window.performance.measure("measure_frame_duration", "mark_start_frame", "mark_end_frame");
-  if (frame % 10 === 0) {
-    var timesToUpdatePosition = window.performance.getEntriesByName("measure_frame_duration");
-    logAverageFrame(timesToUpdatePosition);
+// function updatePositions() {
+//   frame++;
+//   window.performance.mark("mark_start_frame");
+//
+//   var phase = Math.sin((document.body.scrollTop / 1250));
+//   console.log(phase);
+//
+//   var items = document.querySelectorAll('.mover');
+//   for (var i = 0; i < items.length; i++) {
+//
+//     // TODO: Better way than style.left? 5t
+//
+//     items[i].style.transform = "translateX(15px)";
+//   }
+//
+//   // User Timing API to the rescue again. Seriously, it's worth learning.
+//   // Super easy to create custom metrics.
+//   window.performance.mark("mark_end_frame");
+//   window.performance.measure("measure_frame_duration", "mark_start_frame", "mark_end_frame");
+//   if (frame % 10 === 0) {
+//     var timesToUpdatePosition = window.performance.getEntriesByName("measure_frame_duration");
+//     logAverageFrame(timesToUpdatePosition);
+//   }
+// }
+window.addEventListener('scroll',function() {
+  console.log(document.body.scrollTop,'\n',document.body.scrollTop/1250);
+}
+);
+
+function OscillatingArrayZeroToOne(N) {
+  var list = [];
+  for (var i = 0; i <= N; i++) {
+    // Generats a list containing a one full sine cycle with N elements (e.g. 0 -1 0 1 0 for N = 5)
+    list.push(Math.sin(2*3.1415927*i/N));
   }
+  return list;
 }
 
+function Oscillator(amplitude, frequency) {
+  // frequncy: how many pixels to make a round trip - in px
+  // amplitude: the magnitude of travel - in px
+  var arr = OscillatingArrayZeroToOne(frequency);
+  for (var i = 0; i < arr.length; i++) {
+    arr[i] = amplitude*arr[i];
+  }
+  return arr;
+}
+
+// This was put into global scope so that the function call will not be invoked with every single scroll event!
+var freq = 7500;
+var oslist = Oscillator(200, freq);
+
+function updatePositions() {
+  var items = document.querySelectorAll('.mover');
+
+    for (var i = 0; i < items.length; i++) {
+      var index = document.body.scrollTop;
+      items[i].style.transform = "translateX(" + oslist[index%freq] + "px)";
+      // console.log(oscil_list[index%30]);
+    }
+}
 // runs updatePositions on scroll
 window.addEventListener('scroll', updatePositions);
 
@@ -530,7 +576,9 @@ document.addEventListener('DOMContentLoaded', function() {
     elem.src = "images/pizza.png";
     elem.style.height = "100px";
     elem.style.width = "73.333px";
-    elem.basicLeft = (i % cols) * s;
+
+    // Position pizzas.
+    elem.style.left = (i % cols) * s;
     elem.style.top = (Math.floor(i / cols) * s) + 'px';
     document.querySelector("#movingPizzas1").appendChild(elem);
   }
