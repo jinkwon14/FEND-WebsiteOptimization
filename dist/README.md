@@ -8,9 +8,12 @@ Clone or Download from the [FEND-WebsiteOptimization repository](https://github.
 
 ## Project specifications, results, and list of changes
 ### A. Critical Rendering Path
-⋅⋅⋅**A.1 Specification:** index.html achieves a PageSpeed score of at least 90 for Mobile and Desktop.
-⋅⋅⋅**Optimized Performance: 96/100 on Mobile and 98/100 on Desktop**
-⋅⋅⋅**Optimizations made:**
+
+**A.1 Specification:** index.html achieves a PageSpeed score of at least 90 for Mobile and Desktop.
+
+**Optimized Performance: 96/100 on Mobile and 98/100 on Desktop**
+
+**Optimizations made:**
   1. Removed Google Font.
   2. Inlined two CSS files (style.css and print.css).
   3. Async google-analytics.JS.
@@ -18,9 +21,12 @@ Clone or Download from the [FEND-WebsiteOptimization repository](https://github.
   5. Minified HTML file using.
 
 ### B. Getting Rid of Jank
-⋅⋅⋅**B.1 Specification:** Optimizations made to views/js/main.js make views/pizza.html render with a consistent frame-rate at 60fps when scrolling.
-⋅⋅⋅**Optimized Performance: ~800fps (~1.25 ms/frame)**
-⋅⋅⋅**Optimizations made:**
+
+**B.1 Specification:** Optimizations made to views/js/main.js make views/pizza.html render with a consistent frame-rate at 60fps when scrolling.
+
+**Optimized Performance: ~800fps (~1.25 ms/frame)**
+
+**Optimizations made:**
   1. Moved a number of variables (`items`, `phase`, `top`) outside the for loop to prevent it being invoked on every iteration.
   2. Implemented `style.transform = "translateX()"` to prevent repaints.
   3. Moved a number of variables (`elem,` `document.getElementById("movingPizzas1")`) outside the for loop to prevent.
@@ -30,9 +36,12 @@ Clone or Download from the [FEND-WebsiteOptimization repository](https://github.
   7. Minified HTML, CSS, Java Script files.
 
 
-⋅⋅⋅**B.2 Specification:** Time to resize pizzas is less than 5 ms using the pizza size slider on the views/pizza.html page. Resize time is shown in the browser developer tools.
-⋅⋅⋅**Optimized Performance:** ~0.45 ms
-⋅⋅⋅**Optimizations made:**
+
+**B.2 Specification:** Time to resize pizzas is less than 5 ms using the pizza size slider on the views/pizza.html page. Resize time is shown in the browser developer tools.
+
+**Optimized Performance:** ~0.45 ms
+
+**Optimizations made:**
   1. Replaced `querySelector` with `getElementById`.
   2. Moved "document.querySelectorAll(".randomPizzaContainer").length" outside the for loop to prevent it being invoked on every iteration.
   3. Resized pizzas using %
