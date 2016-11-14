@@ -32,7 +32,7 @@ Profile, optimize, measure... and then lather, rinse, and repeat. Good luck!
 
 ####Part 2: Optimize Frames per Second in pizza.html
 
-To optimize views/pizza.html, you will need to modify views/js/main.js until your frames per second rate is 60 fps or higher. You will find instructive comments in main.js. 
+To optimize views/pizza.html, you will need to modify views/js/main.js until your frames per second rate is 60 fps or higher. You will find instructive comments in main.js.
 
 You might find the FPS Counter/HUD Display useful in Chrome developer tools described here: [Chrome Dev Tools tips-and-tricks](https://developer.chrome.com/devtools/docs/tips-and-tricks).
 
@@ -53,3 +53,43 @@ The portfolio was built on Twitter's <a href="http://getbootstrap.com/">Bootstra
 
 * <a href="http://getbootstrap.com/css/">Bootstrap's CSS Classes</a>
 * <a href="http://getbootstrap.com/components/">Bootstrap's Components</a>
+
+========
+## Optimization Rubrics and Results
+### A. Critical Rendering Path
+A.1 Specification: index.html achieves a PageSpeed score of at least 90 for Mobile and Desktop.
+* Optimizatized Performance: 96/100 on Mobile and 98/100 on Desktop
+* Optimizations made:
+1. Removed Google Font.
+2. Inlined two CSS files (style.css and print.css).
+3. Async google-analytics.JS.
+4. Optimized image files using https://www.giftofspeed.com/jpg-compressor/
+5. Minified HTML file using http://kangax.github.io/html-minifier/
+
+### B. Getting Rid of Jank
+B.1 Specification: Optimizations made to views/js/main.js make views/pizza.html render with a consistent frame-rate at 60fps when scrolling.
+* Optimized Performance: ~800fps (~1.25 ms/frame)
+* Optimizations made:
+1. Moved a number of variables (items, phase, top) outside the for loop to prevent it being invoked on every iteration.
+2. Implemented style.transform = "translateX()" to prevent repaints.
+3. Moved a number of variables (elem, document.getElementById("movingPizzas1")) outside the for loop to prevent.
+4. Decreased the number of pizzas. Made the number depend on the screen size.
+5. Positioned pizzas using %.
+6. Optimized image files using https://www.giftofspeed.com/jpg-compressor/
+7. Minified HTML file using http://kangax.github.io/html-minifier/
+
+
+B.2 Specification: Time to resize pizzas is less than 5 ms using the pizza size slider on the views/pizza.html page. Resize time is shown in the browser developer tools.
+* Optimized Performance: ~0.45 ms
+* Optimizations made:
+1. Replaced "querySelector" with "getElementById".
+2. Moved "document.querySelectorAll(".randomPizzaContainer").length" outside the for loop to prevent it being invoked on every iteration.
+3. Resized pizzas using %
+4. Moved "document.getElementById("randomPizzas")" outside the for loop to prevent it being invoked on every iteration.
+6. Optimized image files using https://www.giftofspeed.com/jpg-compressor/
+7. Minified HTML file using http://kangax.github.io/html-minifier/
+
+Future Goals
+1. Look into some additional recommendations from previous feedback
+  - Implement 'use strict' on views/js/main.js
+  -

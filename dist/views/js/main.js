@@ -1,23 +1,3 @@
-/*
-Welcome to the 60fps project! Your goal is to make Cam's Pizzeria website run
-jank-free at 60 frames per second.
-
-There are two major issues in this code that lead to sub-60fps performance. Can
-you spot and fix both?
-
-
-Built into the code, you'll find a few instances of the User Timing API
-(window.performance), which will be console.log()ing frame rate data into the
-browser console. To learn more about User Timing API, check out:
-http://www.html5rocks.com/en/tutorials/webperformance/usertiming/
-
-Creator:
-Cameron Pittman, Udacity Course Developer
-cameron *at* udacity *dot* com
-*/
-
-// As you may have realized, this website randomly generates pizzas.
-// Here are arrays of all possible pizza ingredients.
 var pizzaIngredients = {};
 pizzaIngredients.meats = [
   "Pepperoni",
@@ -399,16 +379,17 @@ var pizzaElementGenerator = function(i) {
 var resizePizzas = function(size) {
   window.performance.mark("mark_start_resize");
 
+  // OPTIMIZATION B.2.1. Replaced "querySelector" with "getElementById"
   function changeSliderLabel(size) {
     switch(size) {
       case "1":
-        document.querySelector("#pizzaSize").innerHTML = "Small";
+        document.getElementById("pizzaSize").innerHTML = "Small";
         return;
       case "2":
-        document.querySelector("#pizzaSize").innerHTML = "Medium";
+        document.getElementById("pizzaSize").innerHTML = "Medium";
         return;
       case "3":
-        document.querySelector("#pizzaSize").innerHTML = "Large";
+        document.getElementById("pizzaSize").innerHTML = "Large";
         return;
       default:
         console.log("bug in changeSliderLabel");
@@ -440,9 +421,14 @@ var resizePizzas = function(size) {
 
   // Spent a lot of time figuring out how to direclty apply percent-size to the width and landed on the link below while searching for help.
   // Was able to finish with the help from the thread - https://discussions.udacity.com/t/project4-how-do-i-optimize-the-pizza-slider-resize-for-loop/37297/10?u=jin_hyuk_12715213961
+
+  // OPTIMIZATION B.2.2. Moved "document.querySelectorAll(".randomPizzaContainer").length" outside the for loop to prevent it being invoked on every iteration.
+  // OPTIMIZATION B.2.3. Resized  pizzas using %
+  var randomPizzaContainers = document.querySelectorAll(".randomPizzaContainer");
+  var randomPizzaContainersSize = randomPizzaContainers.length;
   function changePizzaSizes(size) {
-    for (var i = 0; i < document.querySelectorAll(".randomPizzaContainer").length; i++) {
-      document.querySelectorAll(".randomPizzaContainer")[i].style.width = newSize*100 + '%';
+    for (var i = 0; i < randomPizzaContainersSize; i++) {
+      randomPizzaContainers[i].style.width = newSize*100 + '%';
     }
   }
 
@@ -455,9 +441,11 @@ var resizePizzas = function(size) {
 };
 
 window.performance.mark("mark_start_generating");
+var i;
 
-for (var i = 2; i < 100; i++) {
-  var pizzasDiv = document.getElementById("randomPizzas");
+// OPTIMIZATION B.2.4. Moved "document.getElementById("randomPizzas")" outside the for loop to prevent it being invoked on every iteration.
+var pizzasDiv = document.getElementById("randomPizzas");
+for (i = 2; i < 100; i++) {
   pizzasDiv.appendChild(pizzaElementGenerator(i));
 }
 
@@ -471,72 +459,37 @@ var frame = 0;
 function logAverageFrame(times) {
   var numberOfEntries = times.length;
   var sum = 0;
-  for (var i = numberOfEntries - 1; i > numberOfEntries - 11; i--) {
+  for (i = numberOfEntries - 1; i > numberOfEntries - 11; i--) {
     sum = sum + times[i].duration;
   }
   console.log("Average scripting time to generate last 10 frames: " + sum / 10 + "ms");
 }
 
-// OscillArrayGenerator: Generates an array composed of values of a sine graph, with an Amplitude A and N number of points.
-// INPUT:
-// amp - Amplitude of the sine function.
-// N - Number of points taken of the sine graph.
-// EXAMPE: OscillArrayGenerator(2, 9) returns list = [0 1 2 1 0 -1 -2 -1 0]
-function OscillArrayGenerator(amp, N) {
-  var list = [];
-  for (var i = 0; i <= N; i++) {
-
-    // Generats a list containing a one full sine cycle with N elements (e.g. 0 -1 0 1 0 for N = 5)
-    list.push(amp*(Math.sin(2*3.1415927*i/N)));
-  }
-  return list;
-}
-
-// Generates a oscillating array using OscillArrayGenerator in the global scope so that the OscillArrayGenerator will not be invoked with every single scroll event.
-// Values for freq and moveRange were arbitrarily chosen to match closely to the original moving-pizzas.
-var freq = 5000;
-var moveRange = (screen.width)/50;
-var oslist = OscillArrayGenerator(moveRange, freq);
-
-// A random number between 0 to 9999(also arbitrarily chosen) is generated.
-// Some math is conducted to this number to randomly position pizzas on the screen.
-var randNum = Math.floor(Math.random()*10000);
-
-// Mechanism of this function: Random initial phase of each pizza is generated one by one upon DomContentLoaded
-//    using a single random number generated in a global scopt and a simple math.
-//    The same initial positions for each pizza is retrieved upon Scroll by applying the same simple math to the same single random
-//    number generated in the global scope. Pizza motion is generated by fetching the next phase of the oslist.
 function updatePositions() {
-    frame++;
-    window.performance.mark("mark_start_frame");
+  frame++;
+  window.performance.mark("mark_start_frame");
 
+  // OPTIMIZATION B.1.1. Moved a number of variables (items, phase, top) outside the for loop to prevent it being invoked on every iteration.
   var items = document.querySelectorAll('.mover');
-    // With this single random number generated(randNum) in the global scope, random initial position of a pizza is retrieved.
-    var r = randNum;
+  var phase;
+  var top = document.body.scrollTop / 1250;
 
-    for (var i = 0; i < items.length; i++) {
-      // The random number, with a simple math applied, is passed on to retrieved the random initial position of the next pizza.
-      r = r*(1+i);
-      // Random initial position of a pizza is retrieved.
-      var initialPhase = r%freq;
+  for (i = 0; i < items.length; i++) {
+    phase = Math.sin(top + i % 5);
 
-      // New position of a pizza is generated by fetching a point from oslist.
-      var index = document.body.scrollTop;
-      // Using transform only invokes Style.
-      items[i].style.transform = "translateX(" + oslist[(initialPhase + index%freq)%freq] + "px)";
-    }
+    // OPTIMIZATION B.1.2 Implemented style.transform = "translateX()" to prevent repaints.
+    items[i].style.transform = "translateX(" + 100*phase + "px)";
+  }
 
-    window.performance.mark("mark_end_frame");
-    window.performance.measure("measure_frame_duration", "mark_start_frame", "mark_end_frame");
-    if (frame % 10 === 0) {
-      var timesToUpdatePosition = window.performance.getEntriesByName("measure_frame_duration");
-      logAverageFrame(timesToUpdatePosition);
-    }
+  window.performance.mark("mark_end_frame");
+  window.performance.measure("measure_frame_duration", "mark_start_frame", "mark_end_frame");
+  if (frame % 10 === 0) {
+    var timesToUpdatePosition = window.performance.getEntriesByName("measure_frame_duration");
+    logAverageFrame(timesToUpdatePosition);
+  }
 }
-// runs updatePositions on scroll
 window.addEventListener('scroll', updatePositions);
 
-// Generates the sliding pizzas when the page loads.
 document.addEventListener('DOMContentLoaded', function() {
   var device_width = screen.width;
   var device_height = screen.height;
@@ -548,21 +501,23 @@ document.addEventListener('DOMContentLoaded', function() {
   var col_height = col_width*1.5;
   var rows = Math.floor(device_height/col_height);
   console.log("Row Numbers:  ", rows);
+
+  // OPTIMIZATION B.1.3. Moved a number of variables (items, phase, top) outside the for loop to prevent it being invoked on every iteration.
+  var movingPizzas = document.getElementById("movingPizzas1");
+  var elem;
+
+// OPTIMIZATION B.1.4. Decreased the number of pizzas. Made the number depend on the screen size.
   var pizzaCount = Math.floor(cols*rows);
-  var r = randNum;
-
-  var elem = document.createElement('img');
-  var movingPizzas = document.getElementById("#movingPizzas1");
-
-  for (var i = 0; i < pizzaCount; i++) {
+  for (i = 0; i < pizzaCount; i++) {
+    elem = document.createElement('img');
     elem.className = 'mover';
-    elem.src = "images/pizza.png";
+    elem.src = "images/pizza_opti.png";
     elem.style.height = "100px";
     elem.style.width = "73.333px";
 
+    // OPTIMIZATION B.1.5. 5. Positioned pizzas using %.
     elem.style.left = (100/8)*(i%cols) + '%';
     elem.style.top = (Math.floor(i / cols) * (100/rows)) + '%';
-    elem.style.padding = "auto";
     movingPizzas.appendChild(elem);
   }
   updatePositions();

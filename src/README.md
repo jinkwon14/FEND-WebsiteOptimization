@@ -64,7 +64,7 @@ A.1 Specification: index.html achieves a PageSpeed score of at least 90 for Mobi
 2. Inlined two CSS files (style.css and print.css).
 3. Async google-analytics.JS.
 4. Optimized image files using https://www.giftofspeed.com/jpg-compressor/
-5. Minified HTML file using http://kangax.github.io/html-minifier/
+5. Minified HTML file using.
 
 ### B. Getting Rid of Jank
 B.1 Specification: Optimizations made to views/js/main.js make views/pizza.html render with a consistent frame-rate at 60fps when scrolling.
@@ -76,7 +76,7 @@ B.1 Specification: Optimizations made to views/js/main.js make views/pizza.html 
 4. Decreased the number of pizzas. Made the number depend on the screen size.
 5. Positioned pizzas using %.
 6. Optimized image files using https://www.giftofspeed.com/jpg-compressor/
-7. Minified HTML file using http://kangax.github.io/html-minifier/
+7. Minified HTML, CSS, Java Script files.
 
 
 B.2 Specification: Time to resize pizzas is less than 5 ms using the pizza size slider on the views/pizza.html page. Resize time is shown in the browser developer tools.
@@ -87,9 +87,10 @@ B.2 Specification: Time to resize pizzas is less than 5 ms using the pizza size 
 3. Resized pizzas using %
 4. Moved "document.getElementById("randomPizzas")" outside the for loop to prevent it being invoked on every iteration.
 6. Optimized image files using https://www.giftofspeed.com/jpg-compressor/
-7. Minified HTML file using http://kangax.github.io/html-minifier/
+7. Minified HTML, CSS, Java Script files.
 
 Future Goals
 1. Look into some additional recommendations from previous feedback
   - Implement 'use strict' on views/js/main.js
+  - Implement hidden on views/css/style.css
   -
