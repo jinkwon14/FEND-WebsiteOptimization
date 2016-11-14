@@ -402,24 +402,24 @@ var pizzaElementGenerator = function(i) {
 
 // resizePizzas(size) is called when the slider in the "Our Pizzas" section of the website moves.
 var resizePizzas = function(size) {
-  window.performance.mark("mark_start_resize");   // User Timing API function
-
   // Changes the value for the size of the pizza above the slider
   function changeSliderLabel(size) {
     switch(size) {
       case "1":
-        document.querySelector("#pizzaSize").innerHTML = "Small";
-        return;
+      document.querySelector("#pizzaSize").innerHTML = "Small";
+      return;
       case "2":
-        document.querySelector("#pizzaSize").innerHTML = "Medium";
-        return;
+      document.querySelector("#pizzaSize").innerHTML = "Medium";
+      return;
       case "3":
-        document.querySelector("#pizzaSize").innerHTML = "Large";
-        return;
+      document.querySelector("#pizzaSize").innerHTML = "Large";
+      return;
       default:
-        console.log("bug in changeSliderLabel");
+      console.log("bug in changeSliderLabel");
     }
   }
+  window.performance.mark("mark_start_resize");   // User Timing API function
+
 
   changeSliderLabel(size);
 
@@ -451,10 +451,12 @@ var resizePizzas = function(size) {
 
   // Iterates through pizza elements on the page and changes their widths
   function changePizzaSizes(size) {
-    for (var i = 0; i < document.querySelectorAll(".randomPizzaContainer").length; i++) {
-      var dx = determineDx(document.querySelectorAll(".randomPizzaContainer")[i], size);
-      var newwidth = (document.querySelectorAll(".randomPizzaContainer")[i].offsetWidth + dx) + 'px';
-      document.querySelectorAll(".randomPizzaContainer")[i].style.width = newwidth;
+    var pizzaContainers = document.getElementsByClassName(".randomPizzaContainer")
+    for (var i = 0; i < pizzaContainers.length; i++) {
+
+      var dx = determineDx(pizzaContainers[i], size);
+      var newwidth = (pizzaContainers[i].offsetWidth + dx) + 'px';
+      document.getElementsByClassName(".randomPizzaContainer")[i].style.width = newwidth;
     }
   }
 
@@ -468,6 +470,11 @@ var resizePizzas = function(size) {
 };
 
 window.performance.mark("mark_start_generating"); // collect timing data
+
+
+// >>>>>>>
+
+
 
 // This for-loop actually creates and appends all of the pizzas when the page loads
 for (var i = 2; i < 100; i++) {
@@ -532,7 +539,7 @@ function updatePositions() {
     frame++;
     window.performance.mark("mark_start_frame");
 
-  var items = document.querySelectorAll('.mover');
+  var items = document.getElementsByClassName('.mover');
     // With this single random number generated(randNum) in the global scope, random initial position of a pizza is retrieved.
     var r = randNum;
 
