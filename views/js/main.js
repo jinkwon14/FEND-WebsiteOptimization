@@ -445,7 +445,9 @@ var resizePizzas = function(size) {
     var newSize = sizeSwitcher(size);
 
   // Iterates through pizza elements on the page and changes their widths
-  // Was able to finish with the help from the tread - https://discussions.udacity.com/t/project4-how-do-i-optimize-the-pizza-slider-resize-for-loop/37297/10?u=jin_hyuk_12715213961
+
+  // Spent a lot of time figuring out how to direclty apply %size to the width and landed on the link below while searching for help.
+  // Was able to finish with the help from the thread - https://discussions.udacity.com/t/project4-how-do-i-optimize-the-pizza-slider-resize-for-loop/37297/10?u=jin_hyuk_12715213961
   function changePizzaSizes(size) {
     for (var i = 0; i < document.querySelectorAll(".randomPizzaContainer").length; i++) {
       document.querySelectorAll(".randomPizzaContainer")[i].style.width = newSize*100 + '%';
