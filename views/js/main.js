@@ -334,7 +334,6 @@ var ingredientItemizer = function(string) {
   return "<li>" + string + "</li>";
 };
 
-// Returns a string with random pizza ingredients nested inside <li> tags
 var makeRandomPizza = function() {
   var pizza = "";
 
@@ -360,14 +359,13 @@ var makeRandomPizza = function() {
   return pizza;
 };
 
-// returns a DOM element for each pizza
 var pizzaElementGenerator = function(i) {
-  var pizzaContainer,             // contains pizza title, image and list of ingredients
-      pizzaImageContainer,        // contains the pizza image
-      pizzaImage,                 // the pizza image itself
-      pizzaDescriptionContainer,  // contains the pizza title and list of ingredients
-      pizzaName,                  // the pizza name itself
-      ul;                         // the list of ingredients
+  var pizzaContainer,
+      pizzaImageContainer,
+      pizzaImage,
+      pizzaDescriptionContainer,
+      pizzaName,
+      ul;
 
   pizzaContainer = document.createElement("div");
   pizzaImageContainer = document.createElement("div");
@@ -377,7 +375,7 @@ var pizzaElementGenerator = function(i) {
   pizzaContainer.classList.add("randomPizzaContainer");
   pizzaContainer.style.width = "33.33%";
   pizzaContainer.style.height = "325px";
-  pizzaContainer.id = "pizza" + i;                // gives each pizza element a unique id
+  pizzaContainer.id = "pizza" + i;
   pizzaImageContainer.style.width="35%";
 
   pizzaImage.src = "images/pizza.png";
@@ -400,11 +398,9 @@ var pizzaElementGenerator = function(i) {
   return pizzaContainer;
 };
 
-// resizePizzas(size) is called when the slider in the "Our Pizzas" section of the website moves.
 var resizePizzas = function(size) {
-  window.performance.mark("mark_start_resize");   // User Timing API function
+  window.performance.mark("mark_start_resize");
 
-  // Changes the value for the size of the pizza above the slider
   function changeSliderLabel(size) {
     switch(size) {
       case "1":
@@ -444,9 +440,7 @@ var resizePizzas = function(size) {
 
     var newSize = sizeSwitcher(size);
 
-  // Iterates through pizza elements on the page and changes their widths
-
-  // Spent a lot of time figuring out how to direclty apply %size to the width and landed on the link below while searching for help.
+  // Spent a lot of time figuring out how to direclty apply percent-size to the width and landed on the link below while searching for help.
   // Was able to finish with the help from the thread - https://discussions.udacity.com/t/project4-how-do-i-optimize-the-pizza-slider-resize-for-loop/37297/10?u=jin_hyuk_12715213961
   function changePizzaSizes(size) {
     for (var i = 0; i < document.querySelectorAll(".randomPizzaContainer").length; i++) {
@@ -456,33 +450,27 @@ var resizePizzas = function(size) {
 
   changePizzaSizes(size);
 
-  // User Timing API is awesome
   window.performance.mark("mark_end_resize");
   window.performance.measure("measure_pizza_resize", "mark_start_resize", "mark_end_resize");
   var timeToResize = window.performance.getEntriesByName("measure_pizza_resize");
   console.log("Time to resize pizzas: " + timeToResize[timeToResize.length-1].duration + "ms");
 };
 
-window.performance.mark("mark_start_generating"); // collect timing data
+window.performance.mark("mark_start_generating");
 
-// This for-loop actually creates and appends all of the pizzas when the page loads
 for (var i = 2; i < 100; i++) {
   var pizzasDiv = document.getElementById("randomPizzas");
   pizzasDiv.appendChild(pizzaElementGenerator(i));
 }
 
-// User Timing API again. These measurements tell you how long it took to generate the initial pizzas
 window.performance.mark("mark_end_generating");
 window.performance.measure("measure_pizza_generation", "mark_start_generating", "mark_end_generating");
 var timeToGenerate = window.performance.getEntriesByName("measure_pizza_generation");
 console.log("Time to generate pizzas on load: " + timeToGenerate[0].duration + "ms");
 
-// Iterator for number of times the pizzas in the background have scrolled.
-// Used by updatePositions() to decide when to log the average time per frame
 var frame = 0;
 
-// Logs the average amount of time per 10 frames needed to move the sliding background pizzas on scroll.
-function logAverageFrame(times) {   // times is the array of User Timing measurements from updatePositions()
+function logAverageFrame(times) {
   var numberOfEntries = times.length;
   var sum = 0;
   for (var i = numberOfEntries - 1; i > numberOfEntries - 11; i--) {
@@ -490,11 +478,6 @@ function logAverageFrame(times) {   // times is the array of User Timing measure
   }
   console.log("Average scripting time to generate last 10 frames: " + sum / 10 + "ms");
 }
-
-// The following code for sliding background pizzas was pulled from Ilya's demo found at:
-// https://www.igvita.com/slides/2012/devtools-tips-and-tricks/jank-demo.html
-
-// BELOW THIS POINT, MANY FUNCTIONS WERE DELETED AND NEWLY CREATED.
 
 // OscillArrayGenerator: Generates an array composed of values of a sine graph, with an Amplitude A and N number of points.
 // INPUT:
@@ -504,6 +487,7 @@ function logAverageFrame(times) {   // times is the array of User Timing measure
 function OscillArrayGenerator(amp, N) {
   var list = [];
   for (var i = 0; i <= N; i++) {
+
     // Generats a list containing a one full sine cycle with N elements (e.g. 0 -1 0 1 0 for N = 5)
     list.push(amp*(Math.sin(2*3.1415927*i/N)));
   }
@@ -513,7 +497,7 @@ function OscillArrayGenerator(amp, N) {
 // Generates a oscillating array using OscillArrayGenerator in the global scope so that the OscillArrayGenerator will not be invoked with every single scroll event.
 // Values for freq and moveRange were arbitrarily chosen to match closely to the original moving-pizzas.
 var freq = 5000;
-var moveRange = (screen.width)/16;
+var moveRange = (screen.width)/50;
 var oslist = OscillArrayGenerator(moveRange, freq);
 
 // A random number between 0 to 9999(also arbitrarily chosen) is generated.
@@ -561,8 +545,6 @@ document.addEventListener('DOMContentLoaded', function() {
   var s = 256;
   var col_width = device_width/cols;
   var initial_pos = col_width/2;
-
-  // TODO: maybe put rand to here!
 
   var r = randNum;
 
