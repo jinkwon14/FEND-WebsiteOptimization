@@ -9,7 +9,8 @@ Clone or Download from the [FEND-WebsiteOptimization repository](https://github.
 ## Project specifications, results, and list of changes
 ### A. Critical Rendering Path
 
-**A.1 Specification:** index.html achieves a PageSpeed score of at least 90 for Mobile and Desktop.
+####A.1 Specification:
+ index.html achieves a PageSpeed score of at least 90 for Mobile and Desktop.
 
 **Optimized Performance: 96/100 on Mobile and 98/100 on Desktop**
 
@@ -22,7 +23,8 @@ Clone or Download from the [FEND-WebsiteOptimization repository](https://github.
 
 ### B. Getting Rid of Jank
 
-**B.1 Specification:** Optimizations made to views/js/main.js make views/pizza.html render with a consistent frame-rate at 60fps when scrolling.
+####B.1 Specification:
+ Optimizations made to views/js/main.js make views/pizza.html render with a consistent frame-rate at 60fps when scrolling.
 
 **Optimized Performance: ~800fps (~1.25 ms/frame)**
 
@@ -37,7 +39,8 @@ Clone or Download from the [FEND-WebsiteOptimization repository](https://github.
 
 
 
-**B.2 Specification:** Time to resize pizzas is less than 5 ms using the pizza size slider on the views/pizza.html page. Resize time is shown in the browser developer tools.
+####B.2 Specification:
+ Time to resize pizzas is less than 5 ms using the pizza size slider on the views/pizza.html page. Resize time is shown in the browser developer tools.
 
 **Optimized Performance:** ~0.45 ms
 
