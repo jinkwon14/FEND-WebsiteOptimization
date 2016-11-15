@@ -26,7 +26,7 @@ Clone or Download from the [FEND-WebsiteOptimization repository](https://github.
 ####B.1 Specification:
  Optimizations made to views/js/main.js make views/pizza.html render with a consistent frame-rate at 60fps when scrolling.
 
-**Optimized Performance: ~800fps (~1.25 ms/frame)**
+**Optimized Performance: ~4350fps (~0.23 ms/frame)**
 
 **Optimizations made:**
   1. Moved a number of variables (`items`, `phase`, `top`) outside the for loop to prevent it being invoked on every iteration.
@@ -48,9 +48,11 @@ Clone or Download from the [FEND-WebsiteOptimization repository](https://github.
   1. Replaced `querySelector` with `getElementById`.
   2. Moved "document.querySelectorAll(".randomPizzaContainer").length" outside the for loop to prevent it being invoked on every iteration.
   3. Resized pizzas using %
-  4. Moved `document.getElementById("randomPizzas")` outside the for loop to prevent it being invoked on every iteration.
-  5. Optimized image files using [GiftOfSpeed](https://www.giftofspeed.com/jpg-compressor/).
-  6. Minified HTML, CSS, Java Script files.
+  4. Replaced `querySelector` with `getElementsByClassName`.
+  5. Moved `document.getElementById("randomPizzas")` outside the for loop to prevent it being invoked on every iteration.
+  6. Added `backface-visibility: hidden;` to views/css/style.css
+  7. Optimized image files using [GiftOfSpeed](https://www.giftofspeed.com/jpg-compressor/).
+  8. Minified HTML, CSS, Java Script files.
 
 ## Future Goals
 * Implement additional recommendations from previous feedback.
