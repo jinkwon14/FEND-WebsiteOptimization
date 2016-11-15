@@ -497,11 +497,11 @@ document.addEventListener('DOMContentLoaded', function() {
   var cols = 8;
   var s = 256;
 
-  // OPTIMIZATION B.1.3. Moved a number of variables (items, phase, top) outside the for loop to prevent it being invoked on every iteration.
+  // OPTIMIZATION B.1.2. Moved a number of variables (elem, document.getElementById("movingPizzas1")) outside the for loop to prevent it being invoked on every iteration.
   var movingPizzas = document.getElementById("movingPizzas1");
   var elem;
 
-// OPTIMIZATION B.1.4. Decreased the number of pizzas. Made the number depend on the screen size.
+// OPTIMIZATION B.1.3. Decreased the number of pizzas. Made the number depend on the screen size.
   var pizzaCount = device_height/s*cols;
   for (i = 0; i < pizzaCount; i++) {
     elem = document.createElement('img');
@@ -509,8 +509,6 @@ document.addEventListener('DOMContentLoaded', function() {
     elem.src = "images/pizza_opti.png";
     elem.style.height = "100px";
     elem.style.width = "73.333px";
-
-    // OPTIMIZATION B.1.5. 5. Positioned pizzas using %.
     elem.basicLeft = (i % cols) * s;
     elem.style.top = (Math.floor(i / cols) * s) + 'px';
     movingPizzas.appendChild(elem);

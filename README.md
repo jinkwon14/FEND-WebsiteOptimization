@@ -30,13 +30,11 @@ Clone or Download from the [FEND-WebsiteOptimization repository](https://github.
 
 **Optimizations made:**
   1. Moved a number of variables (`items`, `phase`, `top`) outside the for loop to prevent it being invoked on every iteration.
-  2. Implemented `style.transform = "translateX()"` to prevent repaints.
-  3. Moved a number of variables (`elem,` `document.getElementById("movingPizzas1")`) outside the for loop to prevent.
-  4. Decreased the number of pizzas. Made the number depend on the screen size.
-  5. Positioned pizzas using %.
-  6. Optimized image files using [GiftOfSpeed](https://www.giftofspeed.com/jpg-compressor/).
-  7. Minified HTML, CSS, Java Script files.
-
+  2. Moved a number of variables (`elem,` `document.getElementById("movingPizzas1")`) outside the for loop to prevent.
+  3. Decreased the number of pizzas. Made the number depend on the screen size.
+  4. Positioned pizzas using %.
+  5. Optimized image files using [GiftOfSpeed](https://www.giftofspeed.com/jpg-compressor/).
+  6. Minified HTML, CSS, Java Script files.
 
 
 ####B.2 Specification:
