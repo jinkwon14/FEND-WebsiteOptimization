@@ -419,12 +419,12 @@ var resizePizzas = function(size) {
 
     var newSize = sizeSwitcher(size);
 
-  // Spent a lot of time figuring out how to direclty apply percent-size to the width and landed on the link below while searching for help.
-  // Was able to finish with the help from the thread - https://discussions.udacity.com/t/project4-how-do-i-optimize-the-pizza-slider-resize-for-loop/37297/10?u=jin_hyuk_12715213961
+  // Finished with the help from the thread - https://discussions.udacity.com/t/project4-how-do-i-optimize-the-pizza-slider-resize-for-loop/37297/10?u=jin_hyuk_12715213961
 
   // OPTIMIZATION B.2.2. Moved "document.querySelectorAll(".randomPizzaContainer").length" outside the for loop to prevent it being invoked on every iteration.
   // OPTIMIZATION B.2.3. Resized  pizzas using %
-  var randomPizzaContainers = document.querySelectorAll(".randomPizzaContainer");
+  // OPTIMIZATION B.2.4. Replaced `querySelector` with `getElementsByClassName`.
+  var randomPizzaContainers = document.getElementsByClassName("randomPizzaContainer");
   var randomPizzaContainersSize = randomPizzaContainers.length;
   function changePizzaSizes(size) {
     for (var i = 0; i < randomPizzaContainersSize; i++) {
@@ -443,7 +443,7 @@ var resizePizzas = function(size) {
 window.performance.mark("mark_start_generating");
 var i;
 
-// OPTIMIZATION B.2.4. Moved "document.getElementById("randomPizzas")" outside the for loop to prevent it being invoked on every iteration.
+// OPTIMIZATION B.2.5. Moved "document.getElementById("randomPizzas")" outside the for loop to prevent it being invoked on every iteration.
 var pizzasDiv = document.getElementById("randomPizzas");
 for (i = 2; i < 100; i++) {
   pizzasDiv.appendChild(pizzaElementGenerator(i));
@@ -470,15 +470,16 @@ function updatePositions() {
   window.performance.mark("mark_start_frame");
 
   // OPTIMIZATION B.1.1. Moved a number of variables (items, phase, top) outside the for loop to prevent it being invoked on every iteration.
-  var items = document.querySelectorAll('.mover');
-  var phase;
+  var items = document.getElementsByClassName('mover');
+  var phase = [];
   var top = document.body.scrollTop / 1250;
 
-  for (i = 0; i < items.length; i++) {
-    phase = Math.sin(top + i % 5);
+  for (i = 0; i < 5; i++) {
+    phase.push(Math.sin(top + i) * 100);
+  }
 
-    // OPTIMIZATION B.1.2 Implemented style.transform = "translateX()" to prevent repaints.
-    items[i].style.transform = "translateX(" + 100*phase + "px)";
+  for (i = 0; i < items.length; i++) {
+    items[i].style.left = items[i].basicLeft + phase[i%5] + "px";
   }
 
   window.performance.mark("mark_end_frame");
@@ -491,23 +492,17 @@ function updatePositions() {
 window.addEventListener('scroll', updatePositions);
 
 document.addEventListener('DOMContentLoaded', function() {
-  var device_width = screen.width;
   var device_height = screen.height;
 
   var cols = 8;
   var s = 256;
-
-  var col_width = device_width/cols;
-  var col_height = col_width*1.5;
-  var rows = Math.floor(device_height/col_height);
-  console.log("Row Numbers:  ", rows);
 
   // OPTIMIZATION B.1.3. Moved a number of variables (items, phase, top) outside the for loop to prevent it being invoked on every iteration.
   var movingPizzas = document.getElementById("movingPizzas1");
   var elem;
 
 // OPTIMIZATION B.1.4. Decreased the number of pizzas. Made the number depend on the screen size.
-  var pizzaCount = Math.floor(cols*rows);
+  var pizzaCount = device_height/s*cols;
   for (i = 0; i < pizzaCount; i++) {
     elem = document.createElement('img');
     elem.className = 'mover';
@@ -516,8 +511,8 @@ document.addEventListener('DOMContentLoaded', function() {
     elem.style.width = "73.333px";
 
     // OPTIMIZATION B.1.5. 5. Positioned pizzas using %.
-    elem.style.left = (100/8)*(i%cols) + '%';
-    elem.style.top = (Math.floor(i / cols) * (100/rows)) + '%';
+    elem.basicLeft = (i % cols) * s;
+    elem.style.top = (Math.floor(i / cols) * s) + 'px';
     movingPizzas.appendChild(elem);
   }
   updatePositions();
